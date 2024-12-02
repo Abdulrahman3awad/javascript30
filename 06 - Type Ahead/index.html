@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://fav.farm/🔥" />
+    <style>
+        body {
+            background-color: rgb(0, 117, 106);
+            color: white;
+        }
+
+        * {
+            box-sizing: border-box;
+            padding: 0px;
+            margin: 0px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 0px;
+        }
+
+        form input {
+            padding: 10px;
+            width: 300px;
+            height: 38px;
+            font-size: 20px;
+            outline: 0px;
+            border-radius: 5px;
+            border: 2px solid #bcbcbc;
+            background-color: #f6f6f6;
+            outline: 10px solid #ddd;
+            z-index: 999;
+        }
+
+        form input:focus {
+            background-color: #fff;
+        }
+
+        ul li {
+            width: 300px;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: white;
+            color: #181818;
+            border: 1px solid #ddd;
+            padding: 10px;
+            position: relative;
+            top: -15px;
+        }
+
+        ul li:nth-of-type(odd) {
+            clip-path: polygon(1% 0, 99% 0, 100% 100%, 0% 100%);
+            background-image: linear-gradient(#fff, #ececec);
+        }
+
+        ul li:nth-of-type(even) {
+            background-image: linear-gradient(#ececec, #fff);
+            clip-path: polygon(0 0, 100% 1%, 99% 100%, 1% 100%);
+        }
+
+        ul li span:nth-of-type(2) {
+            margin-left: auto;
+        }
+
+        ul li span mark {
+            background-color: rgb(0, 117, 106) !important;
+            color: white;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <form class="search-form">
+        <input type="text" class="search" placeholder="City or State">
+        <ul class="suggestions">
+        </ul>
+        <p>Filter for a city</p>
+        <p>or a state</p>
+    </form>
+    <script>
+        const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+        const input = document.querySelector("input")
+        const ul = document.querySelector("ul")
+        let cities = []
+        fetch(endpoint).then(Blob => Blob.json()).then(data => cities = data)
+        function numbersWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        }
+        function List(object, value) {
+            let li = document.createElement("li")
+            const regex = new RegExp(value, "ig")
+            let cityName = object.city.replace(regex, `<mark>${value}</mark>`)
+            let stateName = object.state.replace(regex, `<mark>${value}</mark>`)
+            li.innerHTML = `
+            <span>${cityName}, ${stateName}</span>
+            <span>${numbersWithCommas(object.population)}</span>
+            `
+            return li
+        }
+        input.addEventListener("input", () => {
+            const value = input.value.toLowerCase()
+            ul.innerHTML = ""
+            if (value) {
+                let lists = cities.filter((object) => {
+                    return object.city.toLowerCase().includes(value) || object.state.toLowerCase().includes(value)
+                })
+                lists.map((li) => ul.prepend(List(li, value)))
+
+            }
+        })
+        // let string = "hi, I am Abdulrahman Awad , I work a front end developer"
+        // let regex = /I/ig
+        // console.log(string.match(regex));
+        // let string2 = "org info com abdo"
+        // let regex2 = /(org|info|com)/ig
+        // console.log(string2.match(regex2));
+        // let numbers = "012345689101129"
+        // let regex3 = /[0-5]/g
+        // console.log(numbers.match(regex3));
+        // let regex4 = /[^0-5]/g
+        // console.log(numbers.match(regex4));
+        // let spChar = "01#2?34!568@910_=+$^%()11-29"
+        // let regex5 = /[^0-9]/g
+        // console.log(spChar.match(regex5));
+        // let practice = "Os1 os9Os Os2 Os8 Os8Os "
+        // let regex6 = /Os[5-9]Os/gi
+        // console.log(practice.match(regex6));
+        // let email = "o@gmail.com f@x.com f@x.net Ab@@x.com x@f...com"
+        // let regex7 = /./g
+        // console.log(email.match(regex7));
+        // let regex8 = /\w/g
+        // console.log(email.match(regex8));
+        // let regex9 = /\w@\w.(com|net)/g
+        // console.log(email.match(regex9));
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
